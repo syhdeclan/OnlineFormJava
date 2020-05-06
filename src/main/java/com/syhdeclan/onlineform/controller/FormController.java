@@ -1,5 +1,6 @@
 package com.syhdeclan.onlineform.controller;
 
+import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.JsonResult;
 import com.syhdeclan.onlineform.entity.Form;
 import com.syhdeclan.onlineform.service.FormService;
@@ -12,7 +13,7 @@ import java.util.List;
  * @Author syh
  */
 @RestController
-@RequestMapping("/form")
+@RequestMapping("/api/form")
 public class FormController {
 
     @Autowired
@@ -27,37 +28,34 @@ public class FormController {
     public JsonResult<Form> get(@PathVariable String code){
         List<Form> list = this.formService.getByCode(code);
         if (list.size() > 0){
-            return new JsonResult<>(0,"获取表单数据成功", list.get(0));
+            return JsonResult.success(list.get(0));
         }
-        return new JsonResult<>(1,"不存在该表单",null);
+        return JsonResult.error(Code.ENTITY_NOT_EXISTS);
     }
 
     @GetMapping
     public JsonResult<List<Form>> list(){
-        return new JsonResult<>(0,"获取表单列表成功",this.formService.getAll());
+        return JsonResult.success(this.formService.getAll());
     }
 
     @PostMapping
     public JsonResult create(Form form){
         this.formService.create(form);
-        return new JsonResult(0,"创建成功");
+        return JsonResult.success("创建表单成功");
     }
-
-
-
 
 
 
     @PutMapping
     public JsonResult modify(){
 
-        return new JsonResult(0,"修改数据成功");
+        return JsonResult.success("修改数据成功");
     }
 
     @DeleteMapping
     public JsonResult delete(){
 
-        return new JsonResult(0,"删除数据成功");
+        return JsonResult.success("删除数据成功");
     }
 
 }

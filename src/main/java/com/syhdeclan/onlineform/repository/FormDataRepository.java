@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface FormDataRepository extends JpaRepository<FormData, Integer> {
 
-    public List<FormData> findAllByIsDeleteOrderByFormIdAsc(int isDelete);
+    List<FormData> findAllByFormIdAndIsDeleteOrderByCreatedAtDesc(long id, int isDelete);
 
 }

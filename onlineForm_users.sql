@@ -1,0 +1,59 @@
+-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+--
+-- Host: 47.98.131.191    Database: onlineForm
+-- ------------------------------------------------------
+-- Server version	5.7.27-0ubuntu0.18.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (70,'申','syhdeclan@163.com',0,NULL,'$2y$10$TeXQ4NoZ.pJnbml/KHSh3.qgXZ898bqPgWa11gkJSkPbkVXErz34u','08MymvDpJOFvGsnn0lC7KmL41YHKVTz0pIc9ztUWzP94KYtLX20q4COCc69B','2019-07-09 00:20:04','2019-07-09 00:20:04'),(71,'啦啦啦','1586949946@qq.com',0,'2019-07-09 00:38:58','$2y$10$SpgvNTg5/5Y36mAVKBA7KOAkhdlvk6QUViNnnMuw8rOoyUNSZietK','WH9nCjlfwheaEZZ2Nv2JepKUbbjKx5ZCX2S4NB9C28XQOTDWp3uCPzt8Zpv7','2019-07-09 00:32:38','2019-07-09 00:38:58'),(72,'Yang','763730141@qq.com',0,'2019-07-09 00:33:37','$2y$10$sLY/JthxbVKFMt/TiYBpvOeZy.7zKOG5anxPaJ1g3vhswAxPfcVvC',NULL,'2019-07-09 00:32:52','2019-07-09 00:33:37'),(73,'syhbb','1103077389@qq.com',0,NULL,'$2y$10$grJe9SK8k9Cr8wXCnA/Tme3n3RsQ.vDiPOzGimEO7Vxmbvt4GE82e',NULL,'2019-07-09 00:33:24','2019-07-09 00:33:24'),(74,'888666','1491180280@qq.com',0,'2019-07-09 00:34:36','$2y$10$Q.h.IBV9wOA4LPG8dJKvwu83FCRixPwaTrnXOVWRwFXjczsoVK4YS',NULL,'2019-07-09 00:34:14','2019-07-09 00:34:36'),(75,'gty','1477005449@qq.com',0,NULL,'$2y$10$vVzIvVwWC9NbfJqlr8NnIexrhpzhz9lqLPIusIgqVXAfBryw7NJ0u',NULL,'2019-07-09 00:34:20','2019-07-09 00:34:20'),(76,'云','1025766900@qq.com',0,NULL,'$2y$10$R8KXndnOeJ2Rsnha66j.Ge7uC1E2KpX/RMHlwj9zj0yaKUf2L1YfO',NULL,'2019-07-09 00:34:45','2019-07-09 00:34:45'),(77,'申玉豪的爸爸','1156415859@qq.com',0,NULL,'$2y$10$D8FouEW8Y8Oi8V3WWVbgF.izE0z2dDGo7JrKSB25QL9DWa3xcHS/W',NULL,'2019-07-09 00:36:00','2019-07-09 00:36:00'),(78,'fff','993608769@qq.com',0,'2019-07-09 00:50:59','$2y$10$KJJ2P/cGIof.J6o47Qi4J.cHUyESIEcg1fhFlD4WbvQXtnv5900xi',NULL,'2019-07-09 00:50:41','2019-07-09 00:50:59'),(79,'申玉豪','110@qq.com',0,NULL,'$2y$10$KwP3UjG4SqpW7RHraPmOieVxoFXPiC88WAbkg8na83F.T/3HzHnc2',NULL,'2019-07-09 00:56:39','2019-07-09 00:56:39'),(80,'syhnb','1299714422@qq.com',0,'2019-07-16 09:23:50','$2y$10$PYCnQf.PgjW98a/O0cnG5O/EW1a7imey4yBjdreGJ88FyHmmfOMLy',NULL,'2019-07-16 09:23:38','2019-07-16 09:23:50'),(81,'hello','11@qq.com',0,NULL,'$2y$10$3yyidAffxI9r1OQAqghii.7LNfiz/t1GgMgqxN6H57KMp1piKn/qG',NULL,'2019-09-12 02:35:56','2019-09-12 02:35:56');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-10-11 14:55:27

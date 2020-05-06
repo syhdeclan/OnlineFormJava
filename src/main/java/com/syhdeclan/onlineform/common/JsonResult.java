@@ -17,15 +17,43 @@ public class JsonResult<T> {
 
     private T data;
 
-    public JsonResult(int code, String msg){
+    private JsonResult(Code code){
+        this.code = code.getCode();
+        this.msg = code.getMsg();
+    }
+
+    private JsonResult(Code code, T data){
+        this.code = code.getCode();
+        this.msg = code.getMsg();
+        this.data = data;
+    }
+
+    private JsonResult(T data){
+        this.code = Code.SUCCESS.getCode();
+        this.msg = Code.SUCCESS.getMsg();
+        this.data = data;
+    }
+
+    private JsonResult(int code, String msg){
         this.code = code;
         this.msg = msg;
     }
 
-    public JsonResult(int code, String msg, T data){
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
+
+    public static <T> JsonResult success(T data){
+        return new JsonResult<>(data);
+    }
+
+    public static <T> JsonResult error(Code code){
+        return new JsonResult<>(code);
+    }
+
+    public static <T> JsonResult error(int code, String msg){
+        return new JsonResult<>(code,msg);
+    }
+
+    public static <T> JsonResult error(Code code, T data){
+        return new JsonResult<>(code,data);
     }
 
     public int getCode() {

@@ -9,9 +9,9 @@ public class WebException extends RuntimeException{
     private int code;
     private String msg;
 
-    public WebException(int code,String msg){
-        this.code = code;
-        this.msg = msg;
+    public WebException(Code code){
+        this.code = code.getCode();
+        this.msg = code.getMsg();
     }
 
     public int getCode() {

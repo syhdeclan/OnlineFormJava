@@ -1,23 +1,33 @@
 package com.syhdeclan.onlineform.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
+/**
+ * @Author
+ */
 @Entity
 @Table(name = "form")
+@DynamicUpdate
+@DynamicInsert
 public class Form {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "表单名不能为空")
     private String name;
 
     private String intro;
 
+    @NotBlank(message = "表单没有包涵任何内容")
     private String content;
 
     private String code;
@@ -25,6 +35,8 @@ public class Form {
     private Integer count;
 
     private Long authorId;
+
+    private String authorName;
 
     private Integer privilege;
 
@@ -46,6 +58,7 @@ public class Form {
                 ", code='" + code + '\'' +
                 ", count=" + count +
                 ", authorId=" + authorId +
+                ", authorName='" + authorName + '\'' +
                 ", privilege=" + privilege +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
@@ -107,6 +120,14 @@ public class Form {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public Integer getPrivilege() {

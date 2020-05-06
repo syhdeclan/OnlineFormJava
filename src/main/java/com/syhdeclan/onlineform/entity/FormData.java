@@ -1,9 +1,12 @@
 package com.syhdeclan.onlineform.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -11,7 +14,9 @@ import java.util.Date;
  * @time 2019.9.27 pm
  */
 @Entity
-@Table(name = "data")
+@Table(name = "formData")
+@DynamicInsert
+@DynamicUpdate
 public class FormData {
 
     @Id
@@ -22,6 +27,7 @@ public class FormData {
     private Long formId;
 
     @Column(name = "data")
+    @NotBlank(message = "填写信息不能为空")
     private String data;
 
     @Column(name = "owner")
