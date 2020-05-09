@@ -39,7 +39,7 @@ public class FormController {
     }
 
     @PostMapping
-    public JsonResult create(Form form){
+    public JsonResult create(@RequestBody Form form){
         this.formService.create(form);
         return JsonResult.success("创建表单成功");
     }

@@ -28,4 +28,4 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
   session:
-    store-type: none
+    store-type: redis

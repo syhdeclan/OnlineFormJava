@@ -24,26 +24,28 @@ public class UpdateLogController {
     UpdateLogService updateLogService;
 
     @GetMapping("/{english}")
-    public JsonResult getAll(@PathVariable String english){
+    public JsonResult getAll(@PathVariable String english) {
         List<UpdateLog> all = this.updateLogService.getAll(english);
         return JsonResult.success(all);
     }
 
     @GetMapping
-    public JsonResult getAll(HttpServletRequest request){
+    public JsonResult getAll(HttpServletRequest request) {
         List<UpdateLog> all = this.updateLogService.getAll(request.getParameter("english"));
         return JsonResult.success(all);
     }
 
     @PostMapping
-    public JsonResult create(@RequestBody UpdateLog updateLog){
+    public JsonResult create(@RequestBody UpdateLog updateLog) {
         this.updateLogService.create(updateLog);
         return JsonResult.success("创建版本日志成功");
     }
 
     @DeleteMapping
-    public JsonResult delete(Long id){
-        this.updateLogService.delete(id);
+    public JsonResult delete(@RequestBody Long[] ids) {
+        for (int i = 0; i < ids.length; i++) {
+            this.updateLogService.delete(ids[i]);
+        }
         return JsonResult.success("删除版本日志成功");
     }
 

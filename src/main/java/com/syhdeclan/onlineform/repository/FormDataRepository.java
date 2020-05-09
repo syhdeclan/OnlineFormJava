@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FormDataRepository extends JpaRepository<FormData, Integer> {
+public interface FormDataRepository extends JpaRepository<FormData, Long> {
 
-    List<FormData> findAllByFormIdAndIsDeleteOrderByCreatedAtDesc(long id, int isDelete);
+    List<FormData> findAllByFormIdAndIsDeleteOrderByCreatedAtAsc(long id, int isDelete);
 
 }

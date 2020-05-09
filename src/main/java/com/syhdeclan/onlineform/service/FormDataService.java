@@ -35,7 +35,7 @@ public class FormDataService {
         //先找到表单ID
         Long id = this.formService.getIdByCode(code);
         //然后通过ID找到相关的所有数据
-        return this.formDataRepository.findAllByFormIdAndIsDeleteOrderByCreatedAtDesc(id,0);
+        return this.formDataRepository.findAllByFormIdAndIsDeleteOrderByCreatedAtAsc(id,0);
     }
 
     @Transactional(rollbackOn = Exception.class)
