@@ -8,8 +8,11 @@ import com.wf.captcha.ArithmeticCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,11 +42,15 @@ public class UserController {
     }
 
     @GetMapping("/code")
-    public JsonResult getCode(){
+    public JsonResult getCode(HttpServletRequest request){
         //验证码有效时间 5分钟
         int expiration = 5;
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36);
+
+        int width = ServletRequestUtils.getIntParameter(request,"width",111);
+        int height = ServletRequestUtils.getIntParameter(request,"height",36);
+
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(width, height);
         // 几位数运算，默认是两位
         captcha.setLen(2);
         // 获取运算的结果

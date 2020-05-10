@@ -1,14 +1,13 @@
 package com.syhdeclan.onlineform.security.validate;
 
-import com.alibaba.druid.util.StringUtils;
 import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.WebException;
-import com.syhdeclan.onlineform.util.RedisUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.syhdeclan.onlineform.security.config.SecurityProperties;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,20 +25,49 @@ import java.util.Set;
  * @create 2020-05-08 21
  **/
 
-public class ValidateCodeFilter extends OncePerRequestFilter {
+public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     private StringRedisTemplate stringRedisTemplate;
 
     private AuthenticationFailureHandler userAuthenticationFailureHandler;
 
+    private Set<String> urls = new HashSet<>();
+
+    private SecurityProperties securityProperties;
+
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    @Override
+    public void afterPropertiesSet() throws ServletException {
+        super.afterPropertiesSet();
+        String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getUrl(),",");
+        for (String configUrl :
+                configUrls) {
+            urls.add(configUrl);
+        }
+        urls.add("login");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+        boolean action = false;
 
-        if (StringUtils.equals("/login", httpServletRequest.getRequestURI())
-                && StringUtils.equalsIgnoreCase(httpServletRequest.getMethod(), "post")) {
+        for (String url :
+                urls) {
+            if (pathMatcher.match(url, httpServletRequest.getRequestURI())) {
+                action = true;
+                break;
+            }
+        }
+        
+        if (action) {
             try {
                 String uuid = httpServletRequest.getParameter("uuid");
                 String userCode = httpServletRequest.getParameter("code");
+                //
+                if (uuid == null || userCode == null){
+                    throw new ValidateException("请求错误");
+                }
                 String code = stringRedisTemplate.opsForValue().get(uuid);
                 stringRedisTemplate.delete(uuid);
                 if (StringUtils.isEmpty(code)) {
@@ -75,5 +104,21 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
     public void setUserAuthenticationFailureHandler(AuthenticationFailureHandler userAuthenticationFailureHandler) {
         this.userAuthenticationFailureHandler = userAuthenticationFailureHandler;
+    }
+
+    public Set<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(Set<String> urls) {
+        this.urls = urls;
+    }
+
+    public SecurityProperties getSecurityProperties() {
+        return securityProperties;
+    }
+
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
     }
 }
