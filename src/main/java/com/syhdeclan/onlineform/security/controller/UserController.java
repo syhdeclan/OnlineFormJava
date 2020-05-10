@@ -4,6 +4,8 @@ import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.JsonResult;
 import com.syhdeclan.onlineform.security.entity.JwtUser;
 import com.syhdeclan.onlineform.security.service.UserService;
+import com.syhdeclan.onlineform.security.validate.ImageCodeGenerator;
+import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import com.wf.captcha.ArithmeticCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,14 +28,19 @@ import java.util.concurrent.TimeUnit;
  **/
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ValidateCodeGenerator imageCodeGenerator;
+
+    /**
+     * 需要授权时返回数据的接口
+     * @return
+     */
     @RequestMapping("/authentication/require")
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public JsonResult requireAuthentication(){
@@ -43,27 +50,7 @@ public class UserController {
 
     @GetMapping("/code")
     public JsonResult getCode(HttpServletRequest request){
-        //验证码有效时间 5分钟
-        int expiration = 5;
-        // 算术类型 https://gitee.com/whvse/EasyCaptcha
-
-        int width = ServletRequestUtils.getIntParameter(request,"width",111);
-        int height = ServletRequestUtils.getIntParameter(request,"height",36);
-
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(width, height);
-        // 几位数运算，默认是两位
-        captcha.setLen(2);
-        // 获取运算的结果
-        String result = captcha.text();
-        String uuid = UUID.randomUUID().toString();
-        // 保存
-        stringRedisTemplate.opsForValue().set(uuid, result, expiration, TimeUnit.MINUTES);
-        // 验证码信息
-        Map<String,Object> imgResult = new HashMap<String,Object>(2){{
-            put("img", captcha.toBase64());
-            put("uuid", uuid);
-        }};
-        return JsonResult.success(imgResult);
+        return JsonResult.success(imageCodeGenerator.generate(request));
     }
 
     @PostMapping("/register")

@@ -45,7 +45,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
                 configUrls) {
             urls.add(configUrl);
         }
-        urls.add("login");
+        urls.add("/login");
     }
 
     @Override

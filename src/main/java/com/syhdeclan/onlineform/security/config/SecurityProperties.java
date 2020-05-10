@@ -15,6 +15,17 @@ public class SecurityProperties {
 
     private ValidateCodeProperties code;
 
+    private int rememberMeSeconds = 3600 * 24 * 7;
+
+
+    public int getRememberMeSeconds() {
+        return rememberMeSeconds;
+    }
+
+    public void setRememberMeSeconds(int rememberMeSeconds) {
+        this.rememberMeSeconds = rememberMeSeconds;
+    }
+
     public ValidateCodeProperties getCode() {
         return code;
     }
