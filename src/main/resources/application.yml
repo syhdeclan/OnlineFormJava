@@ -3,9 +3,9 @@ spring:
     name: druidDataSource
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:mysql://syhtio.cn:3306/onlineForm?characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=true
+      url: jdbc:mysql://localhost:3306/onlineForm?characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=true
       username: root
-      password: marchsoft
+      password: 12171217
       driver-class-name: com.mysql.cj.jdbc.Driver
       filters: stat,wall,log4j,config
       max-active: 100
