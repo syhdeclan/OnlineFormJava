@@ -2,23 +2,19 @@ package com.syhdeclan.onlineform.security.controller;
 
 import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.JsonResult;
+import com.syhdeclan.onlineform.common.WebException;
 import com.syhdeclan.onlineform.security.entity.JwtUser;
 import com.syhdeclan.onlineform.security.service.UserService;
-import com.syhdeclan.onlineform.security.validate.ImageCodeGenerator;
+import com.syhdeclan.onlineform.security.validate.sms.AliyunSmsSender;
+import com.syhdeclan.onlineform.security.validate.sms.SmsCodeGenerator;
 import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
-import com.wf.captcha.ArithmeticCaptcha;
+import com.syhdeclan.onlineform.security.validate.sms.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author shenyvhao
@@ -37,6 +33,12 @@ public class UserController {
     @Autowired
     private ValidateCodeGenerator imageCodeGenerator;
 
+    @Autowired
+    private ValidateCodeGenerator smsCodeGenerator;
+
+    @Autowired
+    private SmsSender aliyunSmsSender;
+
     /**
      * 需要授权时返回数据的接口
      * @return
@@ -51,6 +53,20 @@ public class UserController {
     @GetMapping("/code")
     public JsonResult getCode(HttpServletRequest request){
         return JsonResult.success(imageCodeGenerator.generate(request));
+    }
+
+    @GetMapping("/smsCode")
+    public JsonResult getSmsCode(HttpServletRequest request){
+
+        Map<String,Object> result = null;
+        try {
+            result = smsCodeGenerator.generate(request);
+            aliyunSmsSender.send((String)result.get("phone"),(String)result.get("code"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new WebException(Code.SMS_SEND_ERROR);
+        }
+        return JsonResult.success(result);
     }
 
     @PostMapping("/register")
@@ -72,7 +88,7 @@ public class UserController {
 
     @GetMapping("/checkEmailIsUsed")
     public JsonResult checkEmail(String email){
-        return JsonResult.success(this.userService.checkPhoneIsUsed(email));
+        return JsonResult.success(this.userService.checkEmailIsUsed(email));
     }
 
 }

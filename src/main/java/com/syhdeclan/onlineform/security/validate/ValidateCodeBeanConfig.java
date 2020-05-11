@@ -1,6 +1,10 @@
 package com.syhdeclan.onlineform.security.validate;
 
 import com.syhdeclan.onlineform.security.config.SecurityProperties;
+import com.syhdeclan.onlineform.security.validate.image.ImageCodeGenerator;
+import com.syhdeclan.onlineform.security.validate.sms.AliyunSmsSender;
+import com.syhdeclan.onlineform.security.validate.sms.SmsCodeGenerator;
+import com.syhdeclan.onlineform.security.validate.sms.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +35,10 @@ public class ValidateCodeBeanConfig {
         return imageCodeGenerator;
     }
 
+    @Bean
+    @ConditionalOnMissingBean(SmsSender.class)
+    public SmsSender smsSender(){
+        return new AliyunSmsSender();
+    }
 
 }

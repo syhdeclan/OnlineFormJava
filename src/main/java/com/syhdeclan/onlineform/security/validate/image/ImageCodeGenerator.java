@@ -1,5 +1,6 @@
-package com.syhdeclan.onlineform.security.validate;
+package com.syhdeclan.onlineform.security.validate.image;
 
+import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import com.wf.captcha.ArithmeticCaptcha;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -30,10 +31,14 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
+    /***
+     验证码有效时间 5分钟
+     */
+    private int expiration = 5;
+
     @Override
     public Map generate(HttpServletRequest request) {
-        //验证码有效时间 5分钟
-        int expiration = 5;
+
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
 
         int width = ServletRequestUtils.getIntParameter(request,"width",111);

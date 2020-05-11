@@ -1,8 +1,9 @@
-package com.syhdeclan.onlineform.security.validate;
+package com.syhdeclan.onlineform.security.phone;
 
 import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.WebException;
 import com.syhdeclan.onlineform.security.config.SecurityProperties;
+import com.syhdeclan.onlineform.security.validate.ValidateException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -25,7 +26,7 @@ import java.util.Set;
  * @create 2020-05-08 21
  **/
 
-public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     private StringRedisTemplate stringRedisTemplate;
 
@@ -45,7 +46,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
                 configUrls) {
             urls.add(configUrl);
         }
-        urls.add("/api/login");
+        urls.add("/api/smsLogin");
     }
 
     @Override
@@ -62,14 +63,14 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
         
         if (action) {
             try {
-                String uuid = httpServletRequest.getParameter("uuid");
+                String phone = httpServletRequest.getParameter("phone");
                 String userCode = httpServletRequest.getParameter("code");
                 //
-                if (uuid == null || userCode == null){
-                    throw new ValidateException("请求错误");
+                if (phone == null || userCode == null){
+                    throw new ValidateException("手机号或验证码不能为空");
                 }
-                String code = stringRedisTemplate.opsForValue().get(uuid);
-                stringRedisTemplate.delete(uuid);
+                String code = stringRedisTemplate.opsForValue().get(phone);
+                stringRedisTemplate.delete(phone);
                 if (StringUtils.isEmpty(code)) {
                     throw new ValidateException("验证码不存在或已过期");
                 }

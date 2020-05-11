@@ -155,6 +155,12 @@
             <version>1.6.2</version>
         </dependency>
 
+        <!--        AlibabaSms-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,5 +1,7 @@
 package com.syhdeclan.onlineform.security.config;
 
+import com.syhdeclan.onlineform.security.phone.SmsCodeAuthenticationSecurityConfig;
+import com.syhdeclan.onlineform.security.phone.SmsCodeFilter;
 import com.syhdeclan.onlineform.security.validate.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +53,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource datasource;
 
+    @Autowired
+    SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -72,15 +77,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         validateCodeFilter.setSecurityProperties(securityProperties);
         validateCodeFilter.afterPropertiesSet();
 
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setStringRedisTemplate(stringRedisTemplate);
+        smsCodeFilter.setUserAuthenticationFailureHandler(userAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet();
+
 
         http
                 //添加验证码过滤器
-                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .formLogin()
                     //如果没有登录，则会自动跳到这个接口
                     .loginPage("/authentication/require")
                     //执行登录的接口
-                    .loginProcessingUrl("/login")
+                    .loginProcessingUrl("/api/login")
                     //执行成功的处理器
                     .successHandler(userAuthenticationSuccessHandler)
                     //执行失败的处理器
@@ -130,6 +143,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     //                //需要认证
     //                .authenticated()
                     //关闭csrf以允许Druid
-                .and().csrf().disable();
+                .and().csrf().disable()
+                .apply(smsCodeAuthenticationSecurityConfig);
     }
 }
