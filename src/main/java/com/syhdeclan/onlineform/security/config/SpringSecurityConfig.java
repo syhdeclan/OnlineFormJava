@@ -86,8 +86,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 //添加验证码过滤器
-//                .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .formLogin()
                     //如果没有登录，则会自动跳到这个接口

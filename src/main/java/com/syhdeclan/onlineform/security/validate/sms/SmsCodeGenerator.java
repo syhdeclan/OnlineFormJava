@@ -38,8 +38,8 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
         stringRedisTemplate.opsForValue().set(phone, code, expiration, TimeUnit.MINUTES);
         // 验证码信息
         Map<String,Object> result = new HashMap<String,Object>(2){{
-            put("code", code);
             put("phone", phone);
+            put("msg","发送成功");
         }};
         return result;
     }

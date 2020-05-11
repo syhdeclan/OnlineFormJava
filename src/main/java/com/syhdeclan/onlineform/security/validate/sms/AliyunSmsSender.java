@@ -45,7 +45,6 @@ public class AliyunSmsSender implements SmsSender {
     @Override
     public void send(String phone, String code) {
 
-        System.out.println("向手机"+ phone + "发送了"+ code);
         DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, secret);
         IAcsClient client = new DefaultAcsClient(profile);
 
