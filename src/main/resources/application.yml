@@ -31,5 +31,6 @@ onlineform:
   security:
     code:
       imagecodeurl:
-
       smscodeurl:
+      imageExpiration: 60
+      smsExpiration: 60

@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -41,6 +42,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationFailureHandler userAuthenticationFailureHandler;
+
+    @Autowired
+    private AccessDeniedHandler userAccessDeniedHandler;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -107,6 +111,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(userAuthenticationSuccessHandler)
                     //执行失败的处理器
                     .failureHandler(userAuthenticationFailureHandler)
+                .and()
+                    .exceptionHandling().accessDeniedHandler(userAccessDeniedHandler)
 
                 .and()
                 .rememberMe()
@@ -144,13 +150,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     // 阿里巴巴 druid
                     .antMatchers("/druid/**").permitAll()
                     //登录请求
-                    .antMatchers("/api/authentication/require","/api/login").permitAll()
+                    .antMatchers("/api/authentication/require","/api/login","/api/smsLogin","/api/code","/api/smsCode").permitAll()
                     // 放行OPTIONS请求
                     .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                     //任意url
-    //                .anyRequest()
+//                    .anyRequest()
     //                //需要认证
-    //                .authenticated()
+//                    .authenticated()
                     //关闭csrf以允许Druid
                 .and().csrf().disable()
                 .authenticationProvider(daoAuthenticationProvider())

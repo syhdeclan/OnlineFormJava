@@ -4,7 +4,9 @@ import com.syhdeclan.onlineform.common.Code;
 import com.syhdeclan.onlineform.common.WebException;
 import com.syhdeclan.onlineform.entity.Form;
 import com.syhdeclan.onlineform.repository.FormRepository;
+import com.syhdeclan.onlineform.security.entity.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -47,13 +49,13 @@ public class FormService {
     }
 
     public void create(@Valid Form form) {
-        //生成随机字符串标识
 
         //这里需要来一个判定Code是否重复的步骤吧，需要考虑一下
         form.setCode(getRandomString(6).toUpperCase());
         //用户信息相关
-        form.setAuthorId(70L);
-        form.setAuthorName("申4J");
+        JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        form.setAuthorId(user.getId());
+        form.setAuthorName(user.getUsername());
         this.formRepository.save(form);
     }
 

@@ -36,13 +36,13 @@ public class FormController {
         return JsonResult.error(Code.ENTITY_NOT_EXISTS);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public JsonResult<List<Form>> list(){
         return JsonResult.success(this.formService.getAll());
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public JsonResult create(@RequestBody Form form){
         this.formService.create(form);
         return JsonResult.success("创建表单成功");
@@ -50,12 +50,14 @@ public class FormController {
 
 
     @PutMapping
+    @PreAuthorize("hasRole('USER')")
     public JsonResult modify(){
 
         return JsonResult.success("修改数据成功");
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
     public JsonResult delete(){
 
         return JsonResult.success("删除数据成功");

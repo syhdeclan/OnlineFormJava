@@ -4,6 +4,7 @@ import com.syhdeclan.onlineform.common.JsonResult;
 import com.syhdeclan.onlineform.entity.UpdateLog;
 import com.syhdeclan.onlineform.service.UpdateLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +37,14 @@ public class UpdateLogController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public JsonResult create(@RequestBody UpdateLog updateLog) {
         this.updateLogService.create(updateLog);
         return JsonResult.success("创建版本日志成功");
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
     public JsonResult delete(@RequestBody Long[] ids) {
         for (int i = 0; i < ids.length; i++) {
             this.updateLogService.delete(ids[i]);

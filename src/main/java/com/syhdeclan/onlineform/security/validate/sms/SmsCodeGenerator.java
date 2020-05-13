@@ -1,5 +1,6 @@
 package com.syhdeclan.onlineform.security.validate.sms;
 
+import com.syhdeclan.onlineform.security.config.SecurityProperties;
 import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,13 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     /***
      验证码有效时间 5分钟
      */
-    private int expiration = 5;
+//    private int expiration = 60;
 
     @Override
     public Map generate(HttpServletRequest request) {
@@ -35,7 +39,7 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
         String code = RandomStringUtils.randomNumeric(6);
         String phone = request.getParameter("phone");
         // 保存
-        stringRedisTemplate.opsForValue().set(phone, code, expiration, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(phone, code, securityProperties.getCode().getSmsExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String,Object> result = new HashMap<String,Object>(2){{
             put("code", code);

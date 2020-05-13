@@ -1,7 +1,9 @@
 package com.syhdeclan.onlineform.security.validate.image;
 
+import com.syhdeclan.onlineform.security.config.SecurityProperties;
 import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import com.wf.captcha.ArithmeticCaptcha;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.ServletRequestUtils;
 
@@ -27,6 +29,9 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
         return stringRedisTemplate;
     }
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
@@ -34,7 +39,7 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
     /***
      验证码有效时间 5分钟
      */
-    private int expiration = 5;
+//    private int expiration = 60;
 
     @Override
     public Map generate(HttpServletRequest request) {
@@ -51,7 +56,7 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
         String result = captcha.text();
         String uuid = UUID.randomUUID().toString();
         // 保存
-        stringRedisTemplate.opsForValue().set(uuid, result, expiration, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(uuid, result, securityProperties.getCode().getImageExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String,Object> imgResult = new HashMap<String,Object>(2){{
             put("img", captcha.toBase64());

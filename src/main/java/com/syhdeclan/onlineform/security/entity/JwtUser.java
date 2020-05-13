@@ -1,5 +1,6 @@
 package com.syhdeclan.onlineform.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -31,6 +33,7 @@ public class JwtUser implements UserDetails {
     @NotBlank(message = "用户名不能为空")
     private String username;
 
+    @JsonIgnore
     @NotBlank(message = "密码不能为空")
     private String password;
 
@@ -56,7 +59,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
     }
 
     @Override

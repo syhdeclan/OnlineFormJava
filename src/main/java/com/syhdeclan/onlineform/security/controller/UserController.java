@@ -11,6 +11,7 @@ import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import com.syhdeclan.onlineform.security.validate.sms.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/whoim")
+    @PreAuthorize("hasRole('USER')")
     public Authentication whoim(Authentication authentication){
         return authentication;
     }

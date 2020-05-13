@@ -14,6 +14,27 @@ public class ValidateCodeProperties {
 
     String smsCodeUrl;
 
+    int imageExpiration;
+
+    int smsExpiration;
+
+
+    public int getImageExpiration() {
+        return imageExpiration;
+    }
+
+    public void setImageExpiration(int imageExpiration) {
+        this.imageExpiration = imageExpiration;
+    }
+
+    public int getSmsExpiration() {
+        return smsExpiration;
+    }
+
+    public void setSmsExpiration(int smsExpiration) {
+        this.smsExpiration = smsExpiration;
+    }
+
     public String getImageCodeUrl() {
         return imageCodeUrl;
     }
