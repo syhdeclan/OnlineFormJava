@@ -30,4 +30,6 @@ spring:
 onlineform:
   security:
     code:
-      url:
+      imagecodeurl:
+
+      smscodeurl:

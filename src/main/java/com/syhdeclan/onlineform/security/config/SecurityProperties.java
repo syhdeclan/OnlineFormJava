@@ -15,8 +15,11 @@ public class SecurityProperties {
 
     private ValidateCodeProperties code;
 
-    private int rememberMeSeconds = 3600 * 24 * 7;
 
+
+    //remember me
+    
+    private int rememberMeSeconds = 3600 * 24 * 7;
 
     public int getRememberMeSeconds() {
         return rememberMeSeconds;
@@ -34,5 +37,4 @@ public class SecurityProperties {
         this.code = code;
     }
 
-    //需要get set 方法
 }

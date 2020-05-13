@@ -10,13 +10,23 @@ package com.syhdeclan.onlineform.security.validate;
 
 public class ValidateCodeProperties {
 
-    String url;
+    String imageCodeUrl;
 
-    public String getUrl() {
-        return url;
+    String smsCodeUrl;
+
+    public String getImageCodeUrl() {
+        return imageCodeUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImageCodeUrl(String imageCodeUrl) {
+        this.imageCodeUrl = imageCodeUrl;
+    }
+
+    public String getSmsCodeUrl() {
+        return smsCodeUrl;
+    }
+
+    public void setSmsCodeUrl(String smsCodeUrl) {
+        this.smsCodeUrl = smsCodeUrl;
     }
 }

@@ -3,7 +3,6 @@ package com.syhdeclan.onlineform.security.phone;
 import com.syhdeclan.onlineform.security.handler.UserAuthenticationFailureHandler;
 import com.syhdeclan.onlineform.security.handler.UserAuthenticationSuccessHandler;
 import com.syhdeclan.onlineform.security.service.PhoneService;
-import com.syhdeclan.onlineform.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

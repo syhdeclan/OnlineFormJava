@@ -11,6 +11,7 @@ import com.syhdeclan.onlineform.security.validate.ValidateCodeGenerator;
 import com.syhdeclan.onlineform.security.validate.sms.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +49,11 @@ public class UserController {
     public JsonResult requireAuthentication(){
 
         return JsonResult.error(Code.UNAUTHORIZED);
+    }
+
+    @GetMapping("/whoim")
+    public Authentication whoim(Authentication authentication){
+        return authentication;
     }
 
     @GetMapping("/code")

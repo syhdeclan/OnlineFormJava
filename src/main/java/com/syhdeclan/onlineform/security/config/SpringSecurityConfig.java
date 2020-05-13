@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -68,6 +69,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userService);
+        return daoAuthenticationProvider;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -91,7 +100,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .formLogin()
                     //如果没有登录，则会自动跳到这个接口
-                    .loginPage("/authentication/require")
+                    .loginPage("/api/authentication/require")
                     //执行登录的接口
                     .loginProcessingUrl("/api/login")
                     //执行成功的处理器
@@ -135,7 +144,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     // 阿里巴巴 druid
                     .antMatchers("/druid/**").permitAll()
                     //登录请求
-                    .antMatchers("/authentication/require","/login").permitAll()
+                    .antMatchers("/api/authentication/require","/api/login").permitAll()
                     // 放行OPTIONS请求
                     .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     //任意url
@@ -144,6 +153,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     //                .authenticated()
                     //关闭csrf以允许Druid
                 .and().csrf().disable()
+                .authenticationProvider(daoAuthenticationProvider())
                 .apply(smsCodeAuthenticationSecurityConfig);
     }
 }
