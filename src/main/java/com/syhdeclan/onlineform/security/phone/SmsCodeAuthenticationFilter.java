@@ -39,7 +39,6 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
                 phone = "";
             }
 
-
             phone = phone.trim();
             SmsCodeAuthenticationToken authRequest = new SmsCodeAuthenticationToken(phone);
             this.setDetails(request, authRequest);
@@ -56,9 +55,9 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 
-    public void setUsernameParameter(String usernameParameter) {
-        Assert.hasText(usernameParameter, "Username parameter must not be empty or null");
-        this.phoneParameter = usernameParameter;
+    public void setPhoneParameter(String phoneParameter) {
+        Assert.hasText(phoneParameter, "Phone parameter must not be empty or null");
+        this.phoneParameter = phoneParameter;
     }
 
 
@@ -66,7 +65,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         this.postOnly = postOnly;
     }
 
-    public final String getUsernameParameter() {
+    public final String getPhoneParameter() {
         return this.phoneParameter;
     }
 

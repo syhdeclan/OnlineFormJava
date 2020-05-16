@@ -35,19 +35,8 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig extends AbstractChannelSecurityConfig {
 
-    @Autowired
-    private AuthenticationSuccessHandler userAuthenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler userAuthenticationFailureHandler;
-
-    @Autowired
-    private AccessDeniedHandler userAccessDeniedHandler;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -59,7 +48,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource datasource;
 
     @Autowired
-    SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private SmsCodeFilterConfig smsCodeFilterConfig;
+
+    @Autowired
+    private ImageCodeFilterConfig imageCodeFilterConfig;
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
@@ -84,37 +79,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setStringRedisTemplate(stringRedisTemplate);
-        validateCodeFilter.setUserAuthenticationFailureHandler(userAuthenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.afterPropertiesSet();
+        applyPasswordAuthenticationConfig(http);
 
-        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
-        smsCodeFilter.setStringRedisTemplate(stringRedisTemplate);
-        smsCodeFilter.setUserAuthenticationFailureHandler(userAuthenticationFailureHandler);
-        smsCodeFilter.setSecurityProperties(securityProperties);
-        smsCodeFilter.afterPropertiesSet();
+
 
 
         http
-                //添加验证码过滤器
-                .addFilterBefore(smsCodeFilter,UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-
-                .formLogin()
-                    //如果没有登录，则会自动跳到这个接口
-                    .loginPage("/api/authentication/require")
-                    //执行登录的接口
-                    .loginProcessingUrl("/api/login")
-                    //执行成功的处理器
-                    .successHandler(userAuthenticationSuccessHandler)
-                    //执行失败的处理器
-                    .failureHandler(userAuthenticationFailureHandler)
+                //添加图片验证码过滤器
+                .apply(imageCodeFilterConfig)
                 .and()
-                    .exceptionHandling().accessDeniedHandler(userAccessDeniedHandler)
-
+                //添加短信验证码过滤器
+                .apply(smsCodeFilterConfig)
                 .and()
+
+                //添加短信验证码验证机制
+                .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                //添加用户名密码验证机制
+                .authenticationProvider(daoAuthenticationProvider())
+
+
+//浏览器特有配置
+                //记住我
                 .rememberMe()
                     .tokenRepository(persistentTokenRepository())
                     .tokenValiditySeconds(securityProperties.getRememberMeSeconds())
@@ -159,8 +145,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     //                //需要认证
 //                    .authenticated()
                     //关闭csrf以允许Druid
-                .and().csrf().disable()
-                .authenticationProvider(daoAuthenticationProvider())
-                .apply(smsCodeAuthenticationSecurityConfig);
+                .and().csrf().disable();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,13 +38,14 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
     public Map generate(HttpServletRequest request) {
 
         String code = RandomStringUtils.randomNumeric(6);
-        String phone = request.getParameter("phone");
+        String uuid = UUID.randomUUID().toString();
+
         // 保存
-        stringRedisTemplate.opsForValue().set(phone, code, securityProperties.getCode().getSmsExpiration(), TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(uuid, code, securityProperties.getCode().getSmsExpiration(), TimeUnit.MINUTES);
         // 验证码信息
         Map<String,Object> result = new HashMap<String,Object>(2){{
             put("code", code);
-            put("phone", phone);
+            put("uuid", uuid);
         }};
         return result;
     }

@@ -7,6 +7,7 @@ public enum Code {
     ENTITY_NOT_EXISTS(2,"请求实体不存在"),
     PARAMETER_ERROR(3,"参数错误"),
     SMS_SEND_ERROR(4,"短信发送失败"),
+
     UNAUTHORIZED(10,"未认证，请重新登陆")
     ;
 

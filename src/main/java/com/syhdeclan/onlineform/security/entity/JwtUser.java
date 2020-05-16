@@ -58,6 +58,7 @@ public class JwtUser implements UserDetails {
     private Integer isDelete;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
     }

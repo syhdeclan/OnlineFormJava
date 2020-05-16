@@ -63,20 +63,20 @@ public class SmsCodeFilter extends OncePerRequestFilter implements InitializingB
         
         if (action) {
             try {
-                String phone = httpServletRequest.getParameter("phone");
+                String uuid = httpServletRequest.getParameter("uuid");
                 String userCode = httpServletRequest.getParameter("code");
                 //
-                if (phone == null || userCode == null){
-                    throw new ValidateException("手机号或验证码不能为空");
+                if (uuid == null){
+                    throw new ValidateException("验证码请求出错");
                 }
-                String code = stringRedisTemplate.opsForValue().get(phone);
+                String code = stringRedisTemplate.opsForValue().get(uuid);
                 if (StringUtils.isEmpty(code)) {
                     throw new ValidateException("验证码不存在或已过期");
                 }
                 if (StringUtils.isEmpty(userCode) || !userCode.equalsIgnoreCase(code)) {
                     throw new ValidateException("验证码错误");
                 }
-                stringRedisTemplate.delete(phone);
+                stringRedisTemplate.delete(uuid);
             } catch (ValidateException e) {
                 e.printStackTrace();
                 userAuthenticationFailureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);

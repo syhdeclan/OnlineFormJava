@@ -69,7 +69,11 @@ public class UserController {
         Map<String,Object> result = null;
         try {
             result = smsCodeGenerator.generate(request);
-            aliyunSmsSender.send((String)result.get("phone"),(String)result.get("code"));
+            String phone = request.getParameter("phone");
+            if (phone == null) {
+                throw new WebException(Code.PARAMETER_ERROR);
+            }
+            aliyunSmsSender.send(phone ,(String)result.get("code"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new WebException(Code.SMS_SEND_ERROR);
