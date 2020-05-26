@@ -31,7 +31,7 @@ build/
 .vscode/
 
 ### config ###
-application.properties
-application.yml
-*.properties
-*.yml
+#application.properties
+#application.yml
+#*.properties
+#*.yml
