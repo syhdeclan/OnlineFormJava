@@ -32,3 +32,5 @@ build/
 
 ### config ###
 application.properties
+*.properties
+*.yml
